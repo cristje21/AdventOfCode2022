@@ -72,26 +72,23 @@ int	main(void)
 
 	result = 0;
 	i = 0;
-	fp = fopen("input.txt", "r");
+	fp = fopen("input_day3.txt", "r");
 	if (fp == NULL)
 		return (-1);
 	while (i < 100)
 	{
 		fgets(line[0], 100, fp);
-		if (line[0][0] == '\n')
-			break ;
 		fgets(line[1], 100, fp);
 		fgets(line[2], 100, fp);
 		value = get_badge(line);
 		if (value == -1)
-		{
-			printf("something went wrong!\n");
 			break ;
-		}
 		result += value;
 		i++;
 	}
-	printf("%d\n", result);
+	if (value == -1)
+		printf("something went wrong on attempt number %d!\nbut up until then, this is the ", i + 1);
+	printf("result: %d\n", result);
 	return (0);
 }
 
