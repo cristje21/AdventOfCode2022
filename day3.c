@@ -9,33 +9,33 @@ int	check_case(int c)
 		return (c - 96);
 	else if (c >= 'A' && c <= 'Z')
 		return (c - 38);
-	return (-1);
+	return (0);
 }
 
-// int	get_value(char *line)
-// {
-// 	int		start;
-// 	int		end;
-// 	char	*s;
+int	get_value(char *line)
+{
+	int		start;
+	int		end;
+	char	*s;
 
-// 	end = 0;
-// 	start = 0;
-// 	while (line[end] != '\n')
-// 		end++;
-// 	line[end] = '\0';
-// 	while (start < end / 2)
-// 	{
-// 		s = strchr(&line[end / 2], line[start]);
-// 		if (s == NULL)
-// 		{
-// 			start++;
-// 			continue ;
-// 		}
-// 		return (check_case(line[start]));
-// 		start++;
-// 	}
-// 	return(-1);
-// }
+	end = 0;
+	start = 0;
+	while (line[end] != '\n')
+		end++;
+	line[end] = '\0';
+	while (start < end / 2)
+	{
+		s = strchr(&line[end / 2], line[start]);
+		if (s == NULL)
+		{
+			start++;
+			continue ;
+		}
+		return (check_case(line[start]));
+		start++;
+	}
+	return(0);
+}
 
 int	get_badge(char line[100][100])
 {
@@ -59,18 +59,17 @@ int	get_badge(char line[100][100])
 		}
 		return (check_case(line[0][i]));
 	}
-	return (-1);
+	return (0);
 }
 
 int	main(void)
 {
 	FILE	*fp;
 	char	line[100][100];
-	int		result;
+	int		result[2] = {0, 0};
 	int		value;
 	int		i;
 
-	result = 0;
 	i = 0;
 	fp = fopen("input_day3.txt", "r");
 	if (fp == NULL)
@@ -78,41 +77,16 @@ int	main(void)
 	while (i < 100)
 	{
 		fgets(line[0], 100, fp);
+		result[0] += get_value(line[0]);
 		fgets(line[1], 100, fp);
+		result[0] += get_value(line[1]);
 		fgets(line[2], 100, fp);
+		result[0] += get_value(line[2]);
 		value = get_badge(line);
-		if (value == -1)
-			break ;
-		result += value;
+		result[1] += value;
 		i++;
 	}
-	if (value == -1)
-		printf("something went wrong on attempt number %d!\nbut up until then, this is the ", i + 1);
-	printf("result: %d\n", result);
+	fclose(fp);
+	printf("part 1: %d\npart 2: %d\n", result[0], result[1]);
 	return (0);
 }
-
-// int	main(void)
-// {
-// 	FILE	*fp;
-// 	char	line[100];
-// 	int		result;
-// 	int		value;
-
-// 	result = 0;
-// 	fp = fopen("input.txt", "r");
-// 	if (fp == NULL)
-// 		return (-1);
-// 	while (fgets(line, 100, fp) != NULL)
-// 	{
-// 		value = get_value(line);
-// 		if (value == -1)
-// 		{
-// 			printf("something went wrong!\n");
-// 			break ;
-// 		}
-// 		result += value;
-// 	}
-// 	printf("result = %d\n", result);
-// 	return (0);
-// }
