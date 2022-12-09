@@ -186,7 +186,6 @@ int	main(void)
 			{
 				list = new_list(xy[9][0], xy[9][1]);
 				lst_add_back(head, list);
-				//printf("%d, %d\n", xy[9][0], xy[9][1]);
 			}
 			amount--;
 		}

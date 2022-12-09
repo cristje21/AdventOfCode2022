@@ -33,44 +33,59 @@ char	**make_grid(void)
 int	check_visibility(char **grid, int i, int j)
 {
 	int	temp;
+	int count[4];
 
-	temp = 0;
+	temp = j - 1;
 	if (i == 0 || j == 0 || i == 98 || j == 98)
-		return (1);
-	while (grid[i][temp])
+		return (0);
+	while (temp >= 0)
 	{
-		if (temp == j)
-			return (1);
 		if (grid[i][temp] >= grid[i][j])
+		{
+			count[0] = j - temp;
 			break ;
-		temp++;
+		}
+		if (temp == 0)
+			count[0] = j;
+		temp--;
 	}
 	temp = j + 1;
-	while (grid[i][temp])
+	while (temp <= 98)
 	{
 		if (grid[i][temp] >= grid[i][j])
+		{
+			count[1] = temp - j;
 			break ;
+		}
+		else if (temp == 98)
+			count[1] = temp - j;
 		temp++;
 	}
-	if (grid[i][temp] == '\0')
-		return (1);
-	temp = 0;
-	while (grid[temp])
+	temp = i - 1;
+	while (temp >= 0)
 	{
-		if (temp == i)
-			return (1);
 		if (grid[temp][j] >= grid[i][j])
+		{
+			count[2] = (i - temp);
 			break ;
-		temp++;
+		}
+		else if (temp == 0)
+			count[2] = i;
+		temp--;
 	}
 	temp = i + 1;
-	while (grid[temp])
+	while (temp <= 98)
 	{
 		if (grid[temp][j] >= grid[i][j])
-			return (0);
+		{
+			count[3] = (temp - i);
+			break ;
+		}
+		else if (temp == 98)
+			count[3] = (temp - i);
 		temp++;
 	}
-	return (1);
+	return (count[0] * count[1] * count[2] * count[3]);
 }
 
 int	main(void)
@@ -78,6 +93,7 @@ int	main(void)
 	char	**grid;
 	int		i, j;
 	int		count;
+	int		temp_count;
 
 	i = 0;
 	count = 0;
@@ -87,8 +103,9 @@ int	main(void)
 		j = 0;
 		while (grid[i][j])
 		{
-			if (check_visibility(grid, i, j))
-				count++;
+			temp_count = check_visibility(grid, i, j);
+			if (temp_count > count)
+				count = temp_count;
 			j++;
 		}
 		i++;

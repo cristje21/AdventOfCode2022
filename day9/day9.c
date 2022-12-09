@@ -122,7 +122,7 @@ void print_list(co **head)
 		printf("%d, %d\n", temp->x, temp->y);
 		temp = temp->next;
 	}
-	//printf("%d, %d\n", temp->x, temp->y);
+	printf("%d, %d\n", temp->x, temp->y);
 	printf("count: %d\n", count + 1);
 }
 
@@ -157,7 +157,6 @@ int	main(void)
 			{
 				list = new_list(xy_t[0], xy_t[1]);
 				lst_add_back(head, list);
-				printf("%d, %d\n", xy_t[0], xy_t[1]);
 			}
 			amount--;
 		}
