@@ -14,6 +14,19 @@ void	print_screen(char **screen)
 	}
 }
 
+void	free_all(char **screen)
+{
+	int	i;
+
+	i = 0;
+	while(screen[i])
+	{
+		free(screen[i]);
+		i++;
+	}
+	free(screen);
+}
+
 char	**make_screen(void)
 {
 	char	**screen;
@@ -27,12 +40,7 @@ char	**make_screen(void)
 	{
 		screen[i] = calloc(41, 1);
 		if (screen[i] == NULL)
-		{
-			i--;
-			while (i >= 0)
-				free(screen[i--]);
-			return (free(screen), NULL);
-		}
+			return(free_all(screen), NULL);
 		memset(screen[i], '.', 40);
 		i++;
 	}
@@ -85,6 +93,5 @@ int	main(void)
 			assign_screen(screen, 0);
 	}
 	print_screen(screen);
+	return (free(screen), 0);
 }
-
-//20 60 100 140 
