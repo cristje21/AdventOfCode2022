@@ -3,9 +3,9 @@
 #include <string.h>
 #include "header.h"
 
-void	lst_add_back(co **head, co *list)
+void	lst_add_back(coordinates **head, coordinates *list)
 {
-	co *ptr;
+	coordinates *ptr;
 
 	if (head && *head)
 	{
@@ -18,11 +18,11 @@ void	lst_add_back(co **head, co *list)
 		*head = list;
 }
 
-co	*new_list(int x_t, int y_t)
+coordinates	*new_list(int x_t, int y_t)
 {
-	co	*new;
+	coordinates	*new;
 
-	new = malloc(sizeof(co));
+	new = malloc(sizeof(coordinates));
 	if (new == NULL)
 		return (NULL);
 	new->x = x_t;
@@ -31,7 +31,7 @@ co	*new_list(int x_t, int y_t)
 	return (new);
 }
 
-int	*move(int direction, int *xy)
+int	*move_head(int direction, int *xy)
 {
 	if (direction == 'U')
 		xy[1]++;
@@ -44,46 +44,24 @@ int	*move(int direction, int *xy)
 	return (xy);
 }
 
-int	*move_straight(int *xy_h, int *xy_t, int direction)
-{
-	if ((xy_h[direction] - 1 == xy_t[direction]) || xy_h[direction] + 1 == xy_t[direction])
-		return (xy_t);
-	else if (xy_h[direction] > xy_t[direction])
-		xy_t[direction]++;
-	else if (xy_h[direction] < xy_t[direction])
-		xy_t[direction]--;
-	return (xy_t);
-}
-
 int	*move_diagonally(int *xy_h, int *xy_t, int direction, int var)
 {
 	if (xy_h[direction] == xy_t[direction] + 1 || xy_h[direction] == xy_t[direction] - 1)
 		return (xy_t);
 	else if (xy_h[direction] == xy_t[direction] + 2)
-	{
 		xy_t[direction]++;
-		if (xy_t[var] < xy_h[var])
-			xy_t[var]++;
-		else if (xy_t[var] > xy_h[var])
-			xy_t[var]--;
-	}
 	else if (xy_h[direction] == xy_t[direction] - 2)
-	{
 		xy_t[direction]--;
-		if (xy_t[var] < xy_h[var])
-			xy_t[var]++;
-		else if (xy_t[var] > xy_h[var])
-			xy_t[var]--;
-	}
+	xy_t[var] = xy_h[var];
 	return (xy_t);
 }
 
 int	*move_tail(int *xy_h, int *xy_t)
 {
 	if (xy_h[0] == xy_t[0])
-		return (move_straight(xy_h, xy_t, 1));
+		return (move_diagonally(xy_h, xy_t, 1, 0));
 	else if (xy_h[1] == xy_t[1])
-		return (move_straight(xy_h, xy_t, 0));
+		return (move_diagonally(xy_h, xy_t, 0, 1));
 	else if (xy_h[0] == xy_t[0] + 1 || xy_h[0] == xy_t[0] - 1) //
 		return (move_diagonally(xy_h, xy_t, 1, 0));
 	else if (xy_h[1] == xy_t[1] + 1  || xy_h[1] == xy_t[1] - 1) //changed last 2
@@ -91,9 +69,9 @@ int	*move_tail(int *xy_h, int *xy_t)
 	return (xy_t);
 }
 
-int	compare_list(int x, int y, co **head)
+int	compare_list(int x, int y, coordinates **head)
 {
-	co	*temp;
+	coordinates	*temp;
 
 	temp = *head;
 	if (temp->next == NULL)
@@ -109,9 +87,9 @@ int	compare_list(int x, int y, co **head)
 	return (0);
 }
 
-void print_list(co **head)
+void print_count(coordinates **head)
 {
-	co *temp;
+	coordinates *temp;
 	int	count;
 
 	count = 0;
@@ -119,20 +97,17 @@ void print_list(co **head)
 	while (temp->next != NULL)
 	{
 		count++;
-		printf("%d, %d\n", temp->x, temp->y);
 		temp = temp->next;
 	}
-	printf("%d, %d\n", temp->x, temp->y);
 	printf("count: %d\n", count + 1);
 }
 
 int	main(void)
 {
-	co		*initial;
-	co		**head;
-	co		*list;
-	char	line[10];
+	coordinates		*initial;
+	coordinates		*list;
 	FILE	*fp;
+	char	line[10];
 	int		*xy_t;
 	int		*xy_h;
 	int		amount;
@@ -145,21 +120,20 @@ int	main(void)
 	initial = new_list(0, 0);
 	if (initial == NULL)
 		return (0);
-	head = &initial;
 	while (fgets(line, 10, fp) != NULL)
 	{
 		amount = atoi(&line[2]);
 		while (amount > 0)
 		{
-			xy_h = move(line[0], xy_h);
+			xy_h = move_head(line[0], xy_h);
 			xy_t = move_tail(xy_h, xy_t);
-			if (!compare_list(xy_t[0], xy_t[1], head))
+			if (!compare_list(xy_t[0], xy_t[1], &initial))
 			{
 				list = new_list(xy_t[0], xy_t[1]);
-				lst_add_back(head, list);
+				lst_add_back(&initial, list);
 			}
 			amount--;
 		}
 	}
-	print_list(head);
+	print_count(&initial);
 }
