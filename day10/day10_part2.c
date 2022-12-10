@@ -26,6 +26,13 @@ char	**make_screen(void)
 	while (i < 6)
 	{
 		screen[i] = calloc(41, 1);
+		if (screen[i] == NULL)
+		{
+			i--;
+			while (i >= 0)
+				free(screen[i--]);
+			return (free(screen), NULL);
+		}
 		memset(screen[i], '.', 40);
 		i++;
 	}
@@ -38,10 +45,11 @@ void	assign_screen(char **screen, int addx)
 	static int	pos = 1;
 	static int	cycle = 0;
 	static int	i = 0;
-	int	amount = 2;
+	int			amount;
 
+	amount = 2;
 	if (addx == 0)
-		amount = 1;
+		amount--;
 	if (cycle == 40)
 	{
 		cycle = 0;
@@ -79,4 +87,4 @@ int	main(void)
 	print_screen(screen);
 }
 
-//20 60 100 140 180 220
+//20 60 100 140 

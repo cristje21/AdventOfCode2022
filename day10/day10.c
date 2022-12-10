@@ -40,7 +40,6 @@ int main(void)
 		else if (!strncmp(line, "noop", (long unsigned)4))
 			cycle_count = addx(&sprite_position, cycle_count, 0, 1);
 	}
+	fclose(fp);
 	return (0);
 }
-
-//20 60 100 140 180 220
